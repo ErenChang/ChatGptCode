@@ -1,0 +1,16 @@
+table {
+    border-collapse: collapse;
+    margin: auto;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.mine {
+    background-color: red;
+}
