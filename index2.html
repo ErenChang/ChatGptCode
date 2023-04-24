@@ -20,8 +20,12 @@
             cursor: pointer;
         }
 
-        .revealed {
+        td.revealed {
             background-color: #eee;
+        }
+
+        td.flagged {
+            background-color: #f00;
         }
     </style>
 </head>
@@ -29,7 +33,16 @@
 <body>
     <h1>扫雷游戏</h1>
     <table id="board"></table>
+    <button id="restart-button">重新开始</button>
+    <button id="test">test</button>
     <script src="minesweeper.js"></script>
+    <script>
+        document.getElementById('test')
+            .addEventListener('contextmenu', event => {
+                console.log(event)
+                event.preventDefault()
+            });
+    </script>
 </body>
 
 </html>

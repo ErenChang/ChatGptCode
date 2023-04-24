@@ -5,6 +5,13 @@ const NUM_MINES = 10;
 var board = [];
 var revealedBoard = [];
 
+const restartButton = document.getElementById('restart-button');
+restartButton.addEventListener('click', handleRestartClick);
+
+function handleRestartClick() {
+    init()
+}
+
 function init() {
     for (var row = 0; row < ROWS; row++) {
         board[row] = [];
@@ -47,45 +54,66 @@ function init() {
             td.setAttribute("data-row", row);
             td.setAttribute("data-col", col);
             td.addEventListener("click", clickHandler);
+            td.addEventListener("contextmenu", handleCellRightClick);
             tr.appendChild(td);
         }
         table.appendChild(tr);
     }
 }
 
+
 function clickHandler(event) {
+    console.log("click  Handler....")
     var row = event.target.getAttribute("data-row");
     var col = event.target.getAttribute("data-col");
-    console.log("click  Handler....", event, revealedBoard, row, col)
     if (revealedBoard[row][col]) {
         return;
     }
     revealedBoard[row][col] = true;
     var td = event.target;
-    td.classList.add("revealed");
-    if (board[row][col] == -1) {
-        td.textContent = "X";
-        alert("你输了！");
-        revealBoard();
-    } else if (board[row][col] == 0) {
-        revealEmptyCells(row, col);
-        if (checkWin()) {
-            alert("你赢了！");
-            revealBoard();
-        }
+    console.log("clickHandler", td.classList)
+    if (td.classList[0] == 'flagged') {
+        alert("请先取消地雷标记！");
+        return
     } else {
-        td.textContent = board[row][col];
-        if (checkWin()) {
-            alert("你赢了！");
+        td.classList.add("revealed");
+        console.log("click  Handler....", event, revealedBoard, row, col, board[row][col])
+        if (board[row][col] == -1) {
+            td.textContent = "X";
+            alert("你输了！");
             revealBoard();
+        } else if (board[row][col] == 0) {
+            revealEmptyCells(row, col);
+            if (checkWin()) {
+                alert("你赢了！");
+                revealBoard();
+            }
+        } else {
+            td.textContent = board[row][col];
+            if (checkWin()) {
+                alert("你赢了！");
+                revealBoard();
+            }
         }
     }
 }
+
+function handleCellRightClick(event) {
+    event.preventDefault();
+    const td = event.target;
+    if (td.classList[0] == 'flagged') {
+        td.classList.remove('flagged');
+    } else {
+        td.classList.add('flagged');
+    }
+}
+
 
 function revealEmptyCells(row, col) {
     if (row < 0 || row >= ROWS || col < 0 || col >= COLS || revealedBoard[row][col]) {
         return;
     }
+    console.log("revealEmptyCells", row, col, board[row][col])
     revealedBoard[row][col] = true;
     var td = document.querySelector("[data-row='" + row + "'][data-col='" + col + "']");
     td.classList.add("revealed");
