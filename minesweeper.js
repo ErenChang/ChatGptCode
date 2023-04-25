@@ -2,8 +2,8 @@ const ROWS = 10;
 const COLS = 10;
 const NUM_MINES = 10;
 
-var board = [];
-var revealedBoard = [];
+const board = [];
+const revealedBoard = [];
 
 const restartButton = document.getElementById('restart-button');
 restartButton.addEventListener('click', handleRestartClick);
@@ -59,41 +59,38 @@ function init() {
         }
         table.appendChild(tr);
     }
+    console.log("revealedBoard==>>", revealedBoard, "\r\n       ", "board==>>", board)
 }
 
 
 function clickHandler(event) {
-    console.log("click  Handler....")
-    var row = event.target.getAttribute("data-row");
-    var col = event.target.getAttribute("data-col");
+    var row = parseInt(event.target.getAttribute("data-row"));
+    var col = parseInt(event.target.getAttribute("data-col"));
     if (revealedBoard[row][col]) {
         return;
     }
-    revealedBoard[row][col] = true;
     var td = event.target;
-    console.log("clickHandler", td.classList)
     if (td.classList[0] == 'flagged') {
         alert("请先取消地雷标记！");
         return
-    } else {
-        td.classList.add("revealed");
-        console.log("click  Handler....", event, revealedBoard, row, col, board[row][col])
-        if (board[row][col] == -1) {
-            td.textContent = "X";
-            alert("你输了！");
+    }
+    td.classList.add("revealed");
+    revealEmptyCells(row, col);
+    if (board[row][col] == -1) {
+        td.textContent = "X";
+        alert("你输了！");
+        revealBoard();
+    } else if (board[row][col] == 0) {
+        revealEmptyCells(row, col);
+        if (checkWin()) {
+            alert("你赢了！");
             revealBoard();
-        } else if (board[row][col] == 0) {
-            revealEmptyCells(row, col);
-            if (checkWin()) {
-                alert("你赢了！");
-                revealBoard();
-            }
-        } else {
-            td.textContent = board[row][col];
-            if (checkWin()) {
-                alert("你赢了！");
-                revealBoard();
-            }
+        }
+    } else {
+        td.textContent = board[row][col];
+        if (checkWin()) {
+            alert("你赢了！");
+            revealBoard();
         }
     }
 }
@@ -113,7 +110,6 @@ function revealEmptyCells(row, col) {
     if (row < 0 || row >= ROWS || col < 0 || col >= COLS || revealedBoard[row][col]) {
         return;
     }
-    console.log("revealEmptyCells", row, col, board[row][col])
     revealedBoard[row][col] = true;
     var td = document.querySelector("[data-row='" + row + "'][data-col='" + col + "']");
     td.classList.add("revealed");
