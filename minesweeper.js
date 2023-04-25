@@ -47,6 +47,9 @@ function init() {
         }
     }
     var table = document.getElementById("board");
+    while (table.firstChild) {
+        table.removeChild(table.firstChild);
+    }
     for (var row = 0; row < ROWS; row++) {
         var tr = document.createElement("tr");
         for (var col = 0; col < COLS; col++) {
